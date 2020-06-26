@@ -107,9 +107,7 @@ public class SimDataPlugin implements FlutterPlugin, MethodCallHandler, Activity
       }
 
       JSONObject simCards = new JSONObject();
-      if (cards.length() != 0) {
-        simCards.put("cards", cards);
-      }
+      simCards.put("cards", cards);
 
       return simCards;
     } catch (Exception e) {
