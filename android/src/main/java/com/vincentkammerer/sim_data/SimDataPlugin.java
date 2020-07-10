@@ -61,59 +61,58 @@ public class SimDataPlugin implements FlutterPlugin, MethodCallHandler, Activity
     if (!checkPermission()) {
       requestPermission();
     }
-    String simCards = getSimData().toString();
-    result.success(simCards);
+    try {
+      String simCards = getSimData().toString();
+      result.success(simCards);
+    } catch (Exception e) {
+      result.error("SimData_error", e.getMessage(), e.getStackTrace());
+    }
   }
 
-  private JSONObject getSimData() {
-    try {
-      SubscriptionManager subscriptionManager = (SubscriptionManager) this.applicationContext
-          .getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+  private JSONObject getSimData() throws Exception {
+    SubscriptionManager subscriptionManager = (SubscriptionManager) this.applicationContext
+        .getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 
-      List<SubscriptionInfo> subscriptionInfos = subscriptionManager
-          .getActiveSubscriptionInfoList();
+    List<SubscriptionInfo> subscriptionInfos = subscriptionManager
+        .getActiveSubscriptionInfoList();
 
-      JSONArray cards = new JSONArray();
-      for (SubscriptionInfo subscriptionInfo : subscriptionInfos) {
-        int slotIndex = subscriptionInfo.getSimSlotIndex();
+    JSONArray cards = new JSONArray();
+    for (SubscriptionInfo subscriptionInfo : subscriptionInfos) {
+      int slotIndex = subscriptionInfo.getSimSlotIndex();
 
-        CharSequence carrierName = subscriptionInfo.getCarrierName();
-        String countryIso = subscriptionInfo.getCountryIso();
-        int dataRoaming = subscriptionInfo.getDataRoaming();  // 1 is enabled ; 0 is disabled
-        CharSequence displayName = subscriptionInfo.getDisplayName();
-        String serialNumber = subscriptionInfo.getIccId();
-        int mcc = subscriptionInfo.getMcc();
-        int mnc = subscriptionInfo.getMnc();
-        boolean networkRoaming = subscriptionManager.isNetworkRoaming(slotIndex);
-        String phoneNumber = subscriptionInfo.getNumber();
-        int subscriptionId = subscriptionInfo.getSubscriptionId();
+      CharSequence carrierName = subscriptionInfo.getCarrierName();
+      String countryIso = subscriptionInfo.getCountryIso();
+      int dataRoaming = subscriptionInfo.getDataRoaming();  // 1 is enabled ; 0 is disabled
+      CharSequence displayName = subscriptionInfo.getDisplayName();
+      String serialNumber = subscriptionInfo.getIccId();
+      int mcc = subscriptionInfo.getMcc();
+      int mnc = subscriptionInfo.getMnc();
+      boolean networkRoaming = subscriptionManager.isNetworkRoaming(slotIndex);
+      String phoneNumber = subscriptionInfo.getNumber();
+      int subscriptionId = subscriptionInfo.getSubscriptionId();
 
-        JSONObject card = new JSONObject();
+      JSONObject card = new JSONObject();
 
-        card.put("carrierName", carrierName.toString());
-        card.put("countryCode", countryIso);
-        card.put("displayName", displayName.toString());
-        card.put("isDataRoaming", (dataRoaming == 1));
-        card.put("isNetworkRoaming", networkRoaming);
-        card.put("mcc", mcc);
-        card.put("mnc", mnc);
-        card.put("phoneNumber", phoneNumber);
-        card.put("serialNumber", serialNumber);
-        card.put("slotIndex", slotIndex);
-        card.put("subscriptionId", subscriptionId);
+      card.put("carrierName", carrierName.toString());
+      card.put("countryCode", countryIso);
+      card.put("displayName", displayName.toString());
+      card.put("isDataRoaming", (dataRoaming == 1));
+      card.put("isNetworkRoaming", networkRoaming);
+      card.put("mcc", mcc);
+      card.put("mnc", mnc);
+      card.put("phoneNumber", phoneNumber);
+      card.put("serialNumber", serialNumber);
+      card.put("slotIndex", slotIndex);
+      card.put("subscriptionId", subscriptionId);
 
-        cards.put(card);
+      cards.put(card);
 
-      }
-
-      JSONObject simCards = new JSONObject();
-      simCards.put("cards", cards);
-
-      return simCards;
-    } catch (Exception e) {
-      e.getMessage();
-      return null;
     }
+
+    JSONObject simCards = new JSONObject();
+    simCards.put("cards", cards);
+
+    return simCards;
   }
 
   private void requestPermission() {

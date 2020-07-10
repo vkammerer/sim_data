@@ -67,44 +67,33 @@ class _MyAppState extends State<MyApp> {
             Padding(
               padding: EdgeInsets.all(20.0),
               child: Column(
-                  children: _simData != null &&
-                          _simData.cards is List &&
-                          _simData.cards.length > 0
-                      ? _simData.cards.map((SimCard card) {
-                          return ListTile(
-                            leading: Icon(Icons.sim_card),
-                            title: Text('Card ${card.slotIndex}'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('carrierName: ${card.carrierName}'),
-                                Text('countryCode: ${card.countryCode}'),
-                                Text('displayName: ${card.displayName}'),
-                                Text('isDataRoaming: ${card.isDataRoaming}'),
-                                Text(
-                                    'isNetworkRoaming: ${card.isNetworkRoaming}'),
-                                Text('mcc: ${card.mcc}'),
-                                Text('mnc: ${card.mnc}'),
-                                Text('slotIndex: ${card.slotIndex}'),
-                                Text('serialNumber: ${card.serialNumber}'),
-                                Text('subscriptionId: ${card.subscriptionId}'),
-                              ],
-                            ),
-                          );
-//
-//                          return Container(
-//                            child: Center(
-//                              child: Column(
-//                                children: <Widget>[
-//                                  Text(card.carrierName),
-//                                  Text(card.displayName),
-//                                  Text(card.countryCode),
-//                                  Text('data roaming is ${card.isDataRoaming}')
-//                                ],
-//                              ),
-//                            ),
-//                          );
-                        }).toList()
+                  children: _simData != null && _simData.cards is List
+                      ? _simData.cards.isEmpty
+                          ? [Text('No sim card present')]
+                          : _simData.cards.map((SimCard card) {
+                              return ListTile(
+                                leading: Icon(Icons.sim_card),
+                                title: Text('Card ${card.slotIndex}'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('carrierName: ${card.carrierName}'),
+                                    Text('countryCode: ${card.countryCode}'),
+                                    Text('displayName: ${card.displayName}'),
+                                    Text(
+                                        'isDataRoaming: ${card.isDataRoaming}'),
+                                    Text(
+                                        'isNetworkRoaming: ${card.isNetworkRoaming}'),
+                                    Text('mcc: ${card.mcc}'),
+                                    Text('mnc: ${card.mnc}'),
+                                    Text('slotIndex: ${card.slotIndex}'),
+                                    Text('serialNumber: ${card.serialNumber}'),
+                                    Text(
+                                        'subscriptionId: ${card.subscriptionId}'),
+                                  ],
+                                ),
+                              );
+                            }).toList()
                       : [
                           Center(
                             child: _isLoading
