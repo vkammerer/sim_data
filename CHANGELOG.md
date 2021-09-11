@@ -1,3 +1,7 @@
+## 0.0.2
+
+Supports sound null safety
+
 ## 0.0.1+2
 
 Progagates Android Exception message to Dart side

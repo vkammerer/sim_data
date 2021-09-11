@@ -3,7 +3,7 @@ class SimData {
   SimData(this.cards);
 
   static SimData fromJson(data) {
-    return new SimData(data['cards'] != null && data['cards'] is List
+    return SimData(data['cards'] != null && data['cards'] is List
         ? data['cards']
             .map<SimCard>((_card) => SimCard.fromJson(_card))
             .toList()

@@ -1,19 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sim_data/sim_data.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => new _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
   bool _isLoading = true;
-  SimData _simData;
+  SimData? _simData;
 
   @override
   void initState() {
@@ -37,10 +40,11 @@ class _MyAppState extends State<MyApp> {
       void printSimCardsData() async {
         try {
           SimData simData = await SimDataPlugin.getSimData();
-          simData.cards.forEach((SimCard s) {
+          for (var s in simData.cards) {
+            // ignore: avoid_print
             print('Serial number: ${s.serialNumber}');
-          });
-        } catch (e) {
+          }
+        } on PlatformException catch (e) {
           debugPrint("error! code: ${e.code} - message: ${e.message}");
         }
       }
@@ -57,22 +61,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: const Text('Sim data demo'),
-        ),
+    var cards = _simData?.cards;
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Sim data demo')),
         body: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
-                  children: _simData != null && _simData.cards is List
-                      ? _simData.cards.isEmpty
-                          ? [Text('No sim card present')]
-                          : _simData.cards.map((SimCard card) {
-                              return ListTile(
-                                leading: Icon(Icons.sim_card),
+                children: cards != null
+                    ? cards.isEmpty
+                        ? [const Text('No sim card present')]
+                        : cards
+                            .map(
+                              (SimCard card) => ListTile(
+                                leading: const Icon(Icons.sim_card),
                                 title: Text('Card ${card.slotIndex}'),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,15 +96,17 @@ class _MyAppState extends State<MyApp> {
                                         'subscriptionId: ${card.subscriptionId}'),
                                   ],
                                 ),
-                              );
-                            }).toList()
-                      : [
-                          Center(
-                            child: _isLoading
-                                ? CircularProgressIndicator()
-                                : Text('Failed to load data'),
-                          )
-                        ]),
+                              ),
+                            )
+                            .toList()
+                    : [
+                        Center(
+                          child: _isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text('Failed to load data'),
+                        )
+                      ],
+              ),
             )
           ],
         ),

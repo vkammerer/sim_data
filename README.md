@@ -22,10 +22,10 @@ import 'package:sim_data/sim_data.dart';
 void printSimCardsData() async {
   try {
     SimData simData = await SimDataPlugin.getSimData();
-    simData.cards.forEach((SimCard s) {
-        print('Serial number: ${s.serialNumber}');
-    });
-  } catch(e) {
+    for (var s in simData.cards) {
+      print('Serial number: ${s.serialNumber}');
+    }
+  } on PlatformException catch (e) {
     debugPrint("error! code: ${e.code} - message: ${e.message}");
   }
 }
