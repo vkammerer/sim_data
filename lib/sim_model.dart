@@ -22,6 +22,8 @@ class SimCard {
   final int slotIndex;
   final String serialNumber;
   final int subscriptionId;
+  final String phoneNumber;
+
   SimCard(
       this.carrierName,
       this.countryCode,
@@ -32,7 +34,8 @@ class SimCard {
       this.mnc,
       this.slotIndex,
       this.serialNumber,
-      this.subscriptionId);
+      this.subscriptionId,
+      this.phoneNumber);
 
   static SimCard fromJson(dynamic card) {
     return SimCard(
@@ -45,6 +48,7 @@ class SimCard {
         card['mnc'],
         card['slotIndex'],
         card['serialNumber'],
-        card['subscriptionId']);
+        card['subscriptionId'],
+        card['phoneNumber']);
   }
 }

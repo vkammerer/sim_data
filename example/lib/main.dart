@@ -94,6 +94,7 @@ class _MyAppState extends State<MyApp> {
                                     Text('serialNumber: ${card.serialNumber}'),
                                     Text(
                                         'subscriptionId: ${card.subscriptionId}'),
+                                    Text('phoneNumber: ${card.phoneNumber}'),
                                   ],
                                 ),
                               ),
