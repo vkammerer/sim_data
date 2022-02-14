@@ -1,3 +1,7 @@
+## 0.0.2+1
+
+Fixes phone number not parsed
+
 ## 0.0.2
 
 Supports sound null safety
